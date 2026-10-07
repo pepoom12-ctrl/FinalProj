@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l05pg"]
+albedo_color = Color(0.45, 0.45, 0.5, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_t1xjs"]
+size = Vector3(0.18, 1.5, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oqo1y"]
+albedo_color = Color(0.45, 0.45, 0.5, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_pt1sv"]
+size = Vector3(0.7, 0.18, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3ldl"]
+albedo_color = Color(0.3, 0.27, 0.22, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_wu4d2"]
+size = Vector3(0.8, 0.12, 0.6)
+
+[node name="Cross" type="Node3D" unique_id=808196872]
+transform = Transform3D(0.9972088, 0.07466366, 0, -0.07466366, 0.9972088, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=859018832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+material_override = SubResource("StandardMaterial3D_l05pg")
+mesh = SubResource("BoxMesh_t1xjs")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=635453929]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+material_override = SubResource("StandardMaterial3D_oqo1y")
+mesh = SubResource("BoxMesh_pt1sv")
+
+[node name="Part_3" type="MeshInstance3D" parent="." unique_id=391449922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+material_override = SubResource("StandardMaterial3D_o3ldl")
+mesh = SubResource("BoxMesh_wu4d2")

@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jfsdu"]
+albedo_color = Color(0.4, 0.28, 0.17, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_s7xiy"]
+top_radius = 0.45
+height = 0.6
+radial_segments = 10
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8xo0a"]
+albedo_color = Color(0.75, 0.6, 0.4, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u8ei4"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 0.04
+radial_segments = 10
+rings = 1
+
+[node name="Stump" type="Node3D" unique_id=1814101525]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=1787015221]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+material_override = SubResource("StandardMaterial3D_jfsdu")
+mesh = SubResource("CylinderMesh_s7xiy")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=48307762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.61, 0)
+material_override = SubResource("StandardMaterial3D_8xo0a")
+mesh = SubResource("CylinderMesh_u8ei4")

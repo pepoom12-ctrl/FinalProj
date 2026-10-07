@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qja74"]
+albedo_color = Color(0.3, 0.2, 0.13, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_cd2b6"]
+size = Vector3(0.8, 0.45, 1.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnblw"]
+albedo_color = Color(0.35, 0.24, 0.15, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_vn60a"]
+size = Vector3(0.85, 0.08, 1.85)
+
+[node name="Coffin" type="Node3D" unique_id=1100935345]
+transform = Transform3D(0.99988306, 0.015291178, 0, -0.015291178, 0.99988306, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=1896824012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+material_override = SubResource("StandardMaterial3D_qja74")
+mesh = SubResource("BoxMesh_cd2b6")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=247684566]
+transform = Transform3D(0.9727892, -0.10224427, 0.2079117, 0.104528464, 0.9945219, 0, -0.20677274, 0.02173269, 0.9781476, 0.15, 0.5, 0.1)
+material_override = SubResource("StandardMaterial3D_fnblw")
+mesh = SubResource("BoxMesh_vn60a")

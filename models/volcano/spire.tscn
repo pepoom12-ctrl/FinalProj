@@ -1,0 +1,67 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0272l"]
+albedo_color = Color(0.17, 0.14, 0.15, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ehnv1"]
+top_radius = 0.0
+bottom_radius = 1.391176
+height = 6.8149104
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ld7pc"]
+albedo_color = Color(0.17, 0.14, 0.15, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_polg3"]
+top_radius = 0.0
+bottom_radius = 1.0318682
+height = 6.9734745
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ppwt"]
+albedo_color = Color(0.17, 0.14, 0.15, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cys40"]
+top_radius = 0.0
+bottom_radius = 1.3318783
+height = 5.006047
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h35wn"]
+albedo_color = Color(1, 0.35, 0.05, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(1, 0.35, 0.05, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_v0t5o"]
+radial_segments = 14
+rings = 7
+
+[node name="Spire" type="Node3D" unique_id=1910995597]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=282683995]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07886478, 2, -0.65575874)
+material_override = SubResource("StandardMaterial3D_0272l")
+mesh = SubResource("CylinderMesh_ehnv1")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=257824405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11570898, 2, 0.6747629)
+material_override = SubResource("StandardMaterial3D_ld7pc")
+mesh = SubResource("CylinderMesh_polg3")
+
+[node name="Part_3" type="MeshInstance3D" parent="." unique_id=1762495811]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18299608, 2, 0.04564511)
+material_override = SubResource("StandardMaterial3D_0ppwt")
+mesh = SubResource("CylinderMesh_cys40")
+
+[node name="Part_4" type="MeshInstance3D" parent="." unique_id=1688690653]
+transform = Transform3D(1.8, 0, 0, 0, 0.3, 0, 0, 0, 1.8, 0, 0.1, 0)
+material_override = SubResource("StandardMaterial3D_h35wn")
+mesh = SubResource("SphereMesh_v0t5o")

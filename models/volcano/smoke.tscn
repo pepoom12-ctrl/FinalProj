@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_swt6q"]
+transparency = 1
+albedo_color = Color(0.3, 0.28, 0.3, 0.22)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_457r5"]
+radius = 1.4
+height = 2.8
+radial_segments = 14
+rings = 7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tao15"]
+transparency = 1
+albedo_color = Color(0.3, 0.28, 0.3, 0.22)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_ai726"]
+radius = 1.2
+height = 2.4
+radial_segments = 14
+rings = 7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dy5u"]
+transparency = 1
+albedo_color = Color(0.3, 0.28, 0.3, 0.22)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_scoii"]
+radius = 1.0
+height = 2.0
+radial_segments = 14
+rings = 7
+
+[node name="Smoke" type="Node3D" unique_id=1077243485]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=130879138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11408223, 2, 0)
+material_override = SubResource("StandardMaterial3D_swt6q")
+mesh = SubResource("SphereMesh_457r5")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=810103480]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.008474199, 3.8, 0)
+material_override = SubResource("StandardMaterial3D_tao15")
+mesh = SubResource("SphereMesh_ai726")
+
+[node name="Part_3" type="MeshInstance3D" parent="." unique_id=313560639]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26765776, 5.6, 0)
+material_override = SubResource("StandardMaterial3D_7dy5u")
+mesh = SubResource("SphereMesh_scoii")

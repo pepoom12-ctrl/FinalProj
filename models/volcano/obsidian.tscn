@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nqwhx"]
+albedo_color = Color(0.12, 0.08, 0.18, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.12, 0.08, 0.18, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_eq2vp"]
+top_radius = 0.0
+height = 3.2
+radial_segments = 5
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dodur"]
+albedo_color = Color(0.15, 0.1, 0.22, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.15, 0.1, 0.22, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xbghb"]
+top_radius = 0.0
+bottom_radius = 0.3
+radial_segments = 5
+rings = 1
+
+[node name="Obsidian" type="Node3D" unique_id=1672413077]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=2128503776]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+material_override = SubResource("StandardMaterial3D_nqwhx")
+mesh = SubResource("CylinderMesh_eq2vp")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=2117836531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1, 0.3)
+material_override = SubResource("StandardMaterial3D_dodur")
+mesh = SubResource("CylinderMesh_xbghb")

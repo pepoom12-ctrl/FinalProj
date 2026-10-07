@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/arcane_core.gd" id="1"]
+
+[sub_resource type="SphereShape3D" id="Shape"]
+radius = 2.0
+
+[sub_resource type="SphereMesh" id="Mesh"]
+radius = 0.6
+height = 1.2
+
+[sub_resource type="StandardMaterial3D" id="Mat"]
+albedo_color = Color(0.3, 0.9, 0.6, 1)
+emission_enabled = true
+emission = Color(0.2, 1.0, 0.5, 1)
+
+[sub_resource type="CylinderMesh" id="BeamMesh"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 14.0
+
+[sub_resource type="StandardMaterial3D" id="BeamMat"]
+shading_mode = 0
+transparency = 1
+albedo_color = Color(0.3, 1.0, 0.6, 0.35)
+emission_enabled = true
+emission = Color(0.3, 1.0, 0.6, 1)
+
+[node name="ArcaneCore" type="Area3D"]
+script = ExtResource("1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.0, 0)
+shape = SubResource("Shape")
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.0, 0)
+mesh = SubResource("Mesh")
+material_override = SubResource("Mat")
+
+[node name="Beacon" type="MeshInstance3D" parent="."]
+position = Vector3(0, 7.0, 0)
+mesh = SubResource("BeamMesh")
+material_override = SubResource("BeamMat")

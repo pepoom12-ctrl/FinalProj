@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xfpgq"]
+albedo_color = Color(0.12, 0.08, 0.08, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0nodo"]
+top_radius = 3.8864908
+bottom_radius = 3.8864908
+height = 0.05
+radial_segments = 20
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3ril"]
+albedo_color = Color(1, 0.4, 0.05, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(1, 0.4, 0.05, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lg4ti"]
+top_radius = 3.5864909
+bottom_radius = 3.5864909
+height = 0.05
+radial_segments = 20
+rings = 1
+
+[node name="LavaPool" type="Node3D" unique_id=1000919577]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=984710501]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_xfpgq")
+mesh = SubResource("CylinderMesh_0nodo")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=817488825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+material_override = SubResource("StandardMaterial3D_c3ril")
+mesh = SubResource("CylinderMesh_lg4ti")

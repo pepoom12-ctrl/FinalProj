@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_moemx"]
+albedo_color = Color(0.4, 0.4, 0.42, 1)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_y6id7"]
+radius = 1.5658447
+height = 3.1316893
+radial_segments = 14
+rings = 7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gl40c"]
+albedo_color = Color(0.2, 0.55, 0.3, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.2, 0.55, 0.3, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_jiex4"]
+radius = 1.2526758
+height = 2.5053515
+radial_segments = 14
+rings = 7
+
+[node name="RockMoss" type="Node3D" unique_id=1133970908]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=1243616132]
+transform = Transform3D(1.1, 0, 0, 0, 0.7, 0, 0, 0, 1, 0, 0.7829223, 0)
+material_override = SubResource("StandardMaterial3D_moemx")
+mesh = SubResource("SphereMesh_y6id7")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=843264703]
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 1.2526758, 0)
+material_override = SubResource("StandardMaterial3D_gl40c")
+mesh = SubResource("SphereMesh_jiex4")

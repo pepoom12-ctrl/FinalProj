@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yq7ts"]
+albedo_color = Color(0.88, 0.84, 0.72, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nmg24"]
+top_radius = 0.0
+bottom_radius = 0.15
+height = 1.8704747
+radial_segments = 5
+rings = 1
+
+[node name="BoneSpike" type="Node3D" unique_id=46880300]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=184982948]
+transform = Transform3D(0.98695284, 0.16100942, 0, -0.15972462, 0.9790774, -0.12607701, -0.020299586, 0.124432065, 0.9920204, 0, 0.8, 0)
+material_override = SubResource("StandardMaterial3D_yq7ts")
+mesh = SubResource("CylinderMesh_nmg24")

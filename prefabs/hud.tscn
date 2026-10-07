@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://dqyax5i5btfx3"]
+
+[ext_resource type="Script" uid="uid://doed2axrfd722" path="res://scripts/hud.gd" id="1_73jnp"]
+
+[sub_resource type="StyleBoxFlat" id="HelpBg"]
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
+bg_color = Color(0.05, 0.05, 0.08, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="HUD" type="CanvasLayer" unique_id=1803084512]
+script = ExtResource("1_73jnp")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=330138993]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 420.0
+offset_bottom = 210.0
+
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=1009069837]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="Margin/VBox" unique_id=1117565916]
+layout_mode = 2
+text = "Level"
+
+[node name="HealthBar" type="ProgressBar" parent="Margin/VBox" unique_id=1750536825]
+custom_minimum_size = Vector2(300, 24)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="HealthLabel" type="Label" parent="Margin/VBox/HealthBar" unique_id=1611373047]
+layout_mode = 0
+text = "100 / 100 HP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WaveLabel" type="Label" parent="Margin/VBox" unique_id=1540079550]
+layout_mode = 2
+text = "Wave -"
+
+[node name="ObjectiveLabel" type="Label" parent="Margin/VBox" unique_id=1148266251]
+layout_mode = 2
+text = "Main: 0/0   Side: 0/0"
+
+[node name="ExtractionLabel" type="Label" parent="Margin/VBox" unique_id=283942477]
+layout_mode = 2
+
+[node name="StratagemLabel" type="Label" parent="Margin/VBox" unique_id=1721671045]
+layout_mode = 2
+text = "Stratagems ready"
+
+[node name="InputEcho" type="Label" parent="." unique_id=2032947702]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -110.0
+offset_right = 100.0
+offset_bottom = -80.0
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="ConfirmPrompt" type="Label" parent="." unique_id=240066444]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -60.0
+offset_right = 150.0
+offset_bottom = -30.0
+theme_override_font_sizes/font_size = 18
+text = "Aim and click to drop"
+horizontal_alignment = 1
+
+[node name="StratagemHelp" type="PanelContainer" parent="." unique_id=765253816]
+visible = false
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -60.0
+offset_right = -16.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("HelpBg")
+
+[node name="Label" type="Label" parent="StratagemHelp" unique_id=903398775]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Hold Q"
+horizontal_alignment = 1

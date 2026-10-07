@@ -1,0 +1,217 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_manager.gd" id="lm"]
+[ext_resource type="Script" path="res://scripts/level_decor.gd" id="decor"]
+[ext_resource type="Script" path="res://scripts/ObjectiveManager.gd" id="om"]
+[ext_resource type="Script" path="res://scripts/extraction_zone.gd" id="ez"]
+[ext_resource type="Script" path="res://scripts/objective_pylon.gd" id="pylon"]
+[ext_resource type="Script" path="res://scripts/touch_objective.gd" id="touch"]
+[ext_resource type="Script" path="res://scripts/hold_zone.gd" id="hold"]
+[ext_resource type="Script" path="res://scripts/magma_storm.gd" id="storm"]
+[ext_resource type="PackedScene" path="res://prefabs/player.tscn" id="player"]
+[ext_resource type="PackedScene" path="res://prefabs/camera_rig.tscn" id="cam"]
+[ext_resource type="PackedScene" path="res://prefabs/hud.tscn" id="hud"]
+[ext_resource type="PackedScene" path="res://prefabs/enemy.tscn" id="enemy"]
+[ext_resource type="PackedScene" path="res://prefabs/boss_warlord.tscn" id="boss"]
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(130, 1, 130)
+
+[sub_resource type="BoxMesh" id="GroundMesh"]
+size = Vector3(130, 1, 130)
+
+[sub_resource type="StandardMaterial3D" id="GroundMat"]
+albedo_color = Color(0.2, 0.09, 0.06, 1)
+
+[sub_resource type="BoxMesh" id="OuterMesh"]
+size = Vector3(700, 0.5, 700)
+
+[sub_resource type="StandardMaterial3D" id="OuterMat"]
+albedo_color = Color(0.06, 0.02, 0.02, 1)
+
+[sub_resource type="CylinderShape3D" id="ExtractShape"]
+height = 2.0
+radius = 2.5
+
+[sub_resource type="CylinderMesh" id="ExtractMesh"]
+top_radius = 2.5
+bottom_radius = 2.5
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="ExtractRing"]
+top_radius = 7.0
+bottom_radius = 7.0
+height = 0.03
+
+[sub_resource type="StandardMaterial3D" id="ExtractMat"]
+transparency = 1
+albedo_color = Color(1.0, 0.85, 0.3, 0.55)
+emission_enabled = true
+emission = Color(1.0, 0.8, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="ExtractRingMat"]
+shading_mode = 0
+transparency = 1
+albedo_color = Color(1.0, 0.85, 0.3, 0.18)
+
+[node name="Level3Volcano" type="Node3D"]
+script = ExtResource("lm")
+enemy_scene = ExtResource("enemy")
+faction = 2
+waves = [4, 6, 5]
+spawn_interval = 1.3
+next_level_path = "res://scenes/main_menu.tscn"
+level_name = "Level 3: Volcano - Orcish Juggernauts"
+map_half_size = 65.0
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+position = Vector3(0, -0.5, 0)
+shape = SubResource("GroundShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+position = Vector3(0, -0.5, 0)
+mesh = SubResource("GroundMesh")
+material_override = SubResource("GroundMat")
+
+[node name="Outer" type="MeshInstance3D" parent="Ground"]
+position = Vector3(0, -0.8, 0)
+mesh = SubResource("OuterMesh")
+material_override = SubResource("OuterMat")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.959931, -0.610865, 0)
+light_energy = 1.0
+
+[node name="Decor" type="Node3D" parent="."]
+script = ExtResource("decor")
+theme = 2
+map_half_size = 65.0
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="Spawn1" type="Node3D" parent="SpawnPoints"]
+position = Vector3(-55, 0, -55)
+
+[node name="Spawn2" type="Node3D" parent="SpawnPoints"]
+position = Vector3(55, 0, -55)
+
+[node name="Spawn3" type="Node3D" parent="SpawnPoints"]
+position = Vector3(-55, 0, 55)
+
+[node name="Spawn4" type="Node3D" parent="SpawnPoints"]
+position = Vector3(55, 0, 55)
+
+[node name="ExtractionPoint" type="Area3D" parent="."]
+position = Vector3(-50, 0.1, -45)
+script = ExtResource("ez")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExtractionPoint"]
+shape = SubResource("ExtractShape")
+
+[node name="Visual" type="MeshInstance3D" parent="ExtractionPoint"]
+mesh = SubResource("ExtractMesh")
+material_override = SubResource("ExtractMat")
+
+[node name="Ring" type="MeshInstance3D" parent="ExtractionPoint"]
+mesh = SubResource("ExtractRing")
+material_override = SubResource("ExtractRingMat")
+
+[node name="Player" parent="." instance=ExtResource("player")]
+position = Vector3(0, 0.8, 0)
+
+[node name="CameraRig" parent="." instance=ExtResource("cam")]
+
+[node name="HUD" parent="." instance=ExtResource("hud")]
+
+[node name="ObjectiveManager" type="Node" parent="."]
+script = ExtResource("om")
+objectives = [{
+"id": "drums",
+"main": true,
+"text": "Smash the Orc War Drums",
+"total": 3
+}, {
+"id": "warlord",
+"main": true,
+"text": "Slay the Orcish Warlord (mini-boss)",
+"total": 1
+}, {
+"id": "valves",
+"main": false,
+"text": "Close the Magma Valves (stops the firestorm)",
+"total": 2
+}, {
+"id": "altar",
+"main": false,
+"text": "Cool the Obsidian Altar (stand on it 20s)",
+"total": 1
+}, {
+"id": "kills",
+"main": false,
+"text": "Slay orc raiders",
+"total": 12
+}]
+
+[node name="BossWarlord" parent="." instance=ExtResource("boss")]
+position = Vector3(35, 1.3, -35)
+
+[node name="MagmaStorm" type="Node3D" parent="."]
+script = ExtResource("storm")
+
+[node name="Drum1" type="Area3D" parent="."]
+position = Vector3(-30, 0, -20)
+script = ExtResource("pylon")
+objective_id = "drums"
+kind = "drum"
+hud_name = "Orc War Drum"
+max_health = 130
+hud_main = true
+
+[node name="Drum2" type="Area3D" parent="."]
+position = Vector3(20, 0, 30)
+script = ExtResource("pylon")
+objective_id = "drums"
+kind = "drum"
+hud_name = "Orc War Drum"
+max_health = 130
+hud_main = true
+
+[node name="Drum3" type="Area3D" parent="."]
+position = Vector3(-42, 0, 32)
+script = ExtResource("pylon")
+objective_id = "drums"
+kind = "drum"
+hud_name = "Orc War Drum"
+max_health = 130
+hud_main = true
+
+[node name="Valve1" type="Area3D" parent="."]
+position = Vector3(48, 0, 12)
+script = ExtResource("touch")
+objective_id = "valves"
+kind = "valve"
+effect = "none"
+hud_name = "Magma Valve"
+hud_main = false
+
+[node name="Valve2" type="Area3D" parent="."]
+position = Vector3(-12, 0, -50)
+script = ExtResource("touch")
+objective_id = "valves"
+kind = "valve"
+effect = "none"
+hud_name = "Magma Valve"
+hud_main = false
+
+[node name="Altar" type="Area3D" parent="."]
+position = Vector3(12, 0, -6)
+script = ExtResource("hold")
+objective_id = "altar"
+kind = "altar"
+hud_name = "Obsidian Altar"
+required_time = 20.0
+radius = 3.4
+heal_amount = 30
+hud_main = false

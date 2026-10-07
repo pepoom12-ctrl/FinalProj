@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://xyfrujmx1nb5"]
+
+[ext_resource type="Script" uid="uid://dvr4xod54bnxh" path="res://scripts/level_manager.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://0s3d860b1j60" path="res://prefabs/player.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://d0oms4kjsr7cw" path="res://prefabs/camera_rig.tscn" id="3"]
+[ext_resource type="Script" uid="uid://cij8slsyn15bh" path="res://scripts/extraction_zone.gd" id="3_rsvpv"]
+[ext_resource type="PackedScene" uid="uid://dqyax5i5btfx3" path="res://prefabs/hud.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://qmau1tm6uthi" path="res://prefabs/enemy.tscn" id="5"]
+[ext_resource type="Script" uid="uid://bgttjawxdijfq" path="res://scripts/ObjectiveManager.gd" id="7_r050q"]
+[ext_resource type="PackedScene" path="res://prefabs/boss_warlord.tscn" id="8_ise5k"]
+[ext_resource type="PackedScene" path="res://prefabs/magma_valve.tscn" id="9_4sukp"]
+[ext_resource type="Script" uid="uid://dtip3mu0l56pj" path="res://scripts/magma_storm.gd" id="10_0yoku"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rsvpv"]
+size = Vector3(80, 1, 80)
+
+[sub_resource type="StandardMaterial3D" id="GroundMat"]
+albedo_color = Color(0.227451, 0.101961, 0.0705882, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r050q"]
+size = Vector3(80, 1, 80)
+
+[sub_resource type="CylinderShape3D" id="ExtractShape"]
+radius = 2.5
+
+[sub_resource type="StandardMaterial3D" id="ExtractMat"]
+transparency = 1
+albedo_color = Color(1, 0.533333, 0.266667, 0.53)
+
+[sub_resource type="CylinderMesh" id="ExtractMesh"]
+top_radius = 2.5
+bottom_radius = 2.5
+height = 0.1
+
+[node name="Level3Orc" type="Node3D" unique_id=979645070]
+script = ExtResource("1")
+enemy_scene = ExtResource("5")
+faction = 2
+waves = Array[int]([4, 6, 3])
+spawn_interval = 1.2
+next_level_path = "res://scenes/main_menu.tscn"
+level_name = "Level 3: Volcano - Orcish Juggernauts"
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=1859521370]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=186719104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_rsvpv")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground" unique_id=1683382003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = SubResource("GroundMat")
+mesh = SubResource("BoxMesh_r050q")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1109733374]
+transform = Transform3D(0.8191522, 0.4698461, -0.32898983, 0, 0.5735765, 0.819152, 0.5735762, -0.67101014, 0.46984646, 0, 0, 0)
+light_energy = 1.1
+
+[node name="SpawnPoints" type="Node3D" parent="." unique_id=417735636]
+
+[node name="Spawn1" type="Node3D" parent="SpawnPoints" unique_id=173161803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0, -34)
+
+[node name="Spawn2" type="Node3D" parent="SpawnPoints" unique_id=1863482446]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 0, -34)
+
+[node name="Spawn3" type="Node3D" parent="SpawnPoints" unique_id=1672091196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0, 34)
+
+[node name="Spawn4" type="Node3D" parent="SpawnPoints" unique_id=1789245594]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 0, 34)
+
+[node name="ExtractionPoint" type="Area3D" parent="." unique_id=28630382]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -14)
+script = ExtResource("3_rsvpv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExtractionPoint" unique_id=421202477]
+shape = SubResource("ExtractShape")
+
+[node name="Visual" type="MeshInstance3D" parent="ExtractionPoint" unique_id=1551841232]
+material_override = SubResource("ExtractMat")
+mesh = SubResource("ExtractMesh")
+
+[node name="Player" parent="." unique_id=1375464419 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="CameraRig" parent="." unique_id=1662055264 instance=ExtResource("3")]
+
+[node name="HUD" parent="." unique_id=130389907 instance=ExtResource("4")]
+
+[node name="ObjectiveManager" type="Node" parent="." unique_id=640787956]
+script = ExtResource("7_r050q")
+side_total = 2
+main_text = "Slay the Orcish Warlord (iron-armored mini-boss)"
+side_text = "Close both Magma Valves to stop the firestorms that rain damage across the map"
+
+[node name="BossWarlord" parent="." unique_id=1168649758 instance=ExtResource("8_ise5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 30)
+
+[node name="MagmaValve1" parent="." unique_id=709182435 instance=ExtResource("9_4sukp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, -24)
+
+[node name="MagmaValve2" parent="." unique_id=1314767018 instance=ExtResource("9_4sukp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 22)
+
+[node name="MagmaStorm" type="Node3D" parent="." unique_id=494120955]
+script = ExtResource("10_0yoku")

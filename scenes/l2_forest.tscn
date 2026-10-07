@@ -1,0 +1,225 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_manager.gd" id="lm"]
+[ext_resource type="Script" path="res://scripts/level_decor.gd" id="decor"]
+[ext_resource type="Script" path="res://scripts/ObjectiveManager.gd" id="om"]
+[ext_resource type="Script" path="res://scripts/extraction_zone.gd" id="ez"]
+[ext_resource type="Script" path="res://scripts/objective_pylon.gd" id="pylon"]
+[ext_resource type="Script" path="res://scripts/touch_objective.gd" id="touch"]
+[ext_resource type="Script" path="res://scripts/arcane_core.gd" id="core"]
+[ext_resource type="Script" path="res://scripts/delivery_platform.gd" id="plat"]
+[ext_resource type="PackedScene" path="res://prefabs/player.tscn" id="player"]
+[ext_resource type="PackedScene" path="res://prefabs/camera_rig.tscn" id="cam"]
+[ext_resource type="PackedScene" path="res://prefabs/hud.tscn" id="hud"]
+[ext_resource type="PackedScene" path="res://prefabs/enemy.tscn" id="enemy"]
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(130, 1, 130)
+
+[sub_resource type="BoxMesh" id="GroundMesh"]
+size = Vector3(130, 1, 130)
+
+[sub_resource type="StandardMaterial3D" id="GroundMat"]
+albedo_color = Color(0.06, 0.2, 0.14, 1)
+
+[sub_resource type="BoxMesh" id="OuterMesh"]
+size = Vector3(700, 0.5, 700)
+
+[sub_resource type="StandardMaterial3D" id="OuterMat"]
+albedo_color = Color(0.02, 0.06, 0.05, 1)
+
+[sub_resource type="CylinderShape3D" id="ExtractShape"]
+height = 2.0
+radius = 2.5
+
+[sub_resource type="CylinderMesh" id="ExtractMesh"]
+top_radius = 2.5
+bottom_radius = 2.5
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="ExtractRing"]
+top_radius = 7.0
+bottom_radius = 7.0
+height = 0.03
+
+[sub_resource type="StandardMaterial3D" id="ExtractMat"]
+transparency = 1
+albedo_color = Color(1.0, 0.85, 0.3, 0.55)
+emission_enabled = true
+emission = Color(1.0, 0.8, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="ExtractRingMat"]
+shading_mode = 0
+transparency = 1
+albedo_color = Color(1.0, 0.85, 0.3, 0.18)
+
+[node name="Level2Forest" type="Node3D"]
+script = ExtResource("lm")
+enemy_scene = ExtResource("enemy")
+faction = 1
+waves = [6, 9, 13]
+spawn_interval = 0.8
+next_level_path = "res://scenes/l3_volcano.tscn"
+level_name = "Level 2: Enchanted Forest - Elven Rebels"
+map_half_size = 65.0
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+position = Vector3(0, -0.5, 0)
+shape = SubResource("GroundShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+position = Vector3(0, -0.5, 0)
+mesh = SubResource("GroundMesh")
+material_override = SubResource("GroundMat")
+
+[node name="Outer" type="MeshInstance3D" parent="Ground"]
+position = Vector3(0, -0.8, 0)
+mesh = SubResource("OuterMesh")
+material_override = SubResource("OuterMat")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.959931, -0.610865, 0)
+light_energy = 1.0
+
+[node name="Decor" type="Node3D" parent="."]
+script = ExtResource("decor")
+theme = 1
+map_half_size = 65.0
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="Spawn1" type="Node3D" parent="SpawnPoints"]
+position = Vector3(-55, 0, -55)
+
+[node name="Spawn2" type="Node3D" parent="SpawnPoints"]
+position = Vector3(55, 0, -55)
+
+[node name="Spawn3" type="Node3D" parent="SpawnPoints"]
+position = Vector3(-55, 0, 55)
+
+[node name="Spawn4" type="Node3D" parent="SpawnPoints"]
+position = Vector3(55, 0, 55)
+
+[node name="ExtractionPoint" type="Area3D" parent="."]
+position = Vector3(-48, 0.1, -46)
+script = ExtResource("ez")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExtractionPoint"]
+shape = SubResource("ExtractShape")
+
+[node name="Visual" type="MeshInstance3D" parent="ExtractionPoint"]
+mesh = SubResource("ExtractMesh")
+material_override = SubResource("ExtractMat")
+
+[node name="Ring" type="MeshInstance3D" parent="ExtractionPoint"]
+mesh = SubResource("ExtractRing")
+material_override = SubResource("ExtractRingMat")
+
+[node name="Player" parent="." instance=ExtResource("player")]
+position = Vector3(0, 0.8, 0)
+
+[node name="CameraRig" parent="." instance=ExtResource("cam")]
+
+[node name="HUD" parent="." instance=ExtResource("hud")]
+
+[node name="ObjectiveManager" type="Node" parent="."]
+script = ExtResource("om")
+objectives = [{
+"id": "core",
+"main": true,
+"text": "Steal the Arcane Core and deliver it to the Charging Pad",
+"total": 1
+}, {
+"id": "totems",
+"main": true,
+"text": "Destroy the Elven Totems",
+"total": 2
+}, {
+"id": "alarms",
+"main": false,
+"text": "Sabotage the Elven Alarms (fewer enemy spawns)",
+"total": 2
+}, {
+"id": "lanterns",
+"main": false,
+"text": "Light the Spirit Lanterns (heals you)",
+"total": 3
+}, {
+"id": "kills",
+"main": false,
+"text": "Defeat elven rebels",
+"total": 20
+}]
+
+[node name="ArcaneCore" type="Area3D" parent="."]
+position = Vector3(45, 0, 40)
+script = ExtResource("core")
+
+[node name="ChargingPad" type="Area3D" parent="."]
+position = Vector3(-30, 0, -10)
+script = ExtResource("plat")
+
+[node name="Totem1" type="Area3D" parent="."]
+position = Vector3(35, 0, -30)
+script = ExtResource("pylon")
+objective_id = "totems"
+kind = "totem"
+hud_name = "Elven Totem"
+max_health = 110
+hud_main = true
+
+[node name="Totem2" type="Area3D" parent="."]
+position = Vector3(-40, 0, 35)
+script = ExtResource("pylon")
+objective_id = "totems"
+kind = "totem"
+hud_name = "Elven Totem"
+max_health = 110
+hud_main = true
+
+[node name="Alarm1" type="Area3D" parent="."]
+position = Vector3(-20, 0, 52)
+script = ExtResource("touch")
+objective_id = "alarms"
+kind = "alarm"
+effect = "slow_spawns"
+hud_name = "Elven Alarm"
+hud_main = false
+
+[node name="Alarm2" type="Area3D" parent="."]
+position = Vector3(20, 0, -52)
+script = ExtResource("touch")
+objective_id = "alarms"
+kind = "alarm"
+effect = "slow_spawns"
+hud_name = "Elven Alarm"
+hud_main = false
+
+[node name="Lantern1" type="Area3D" parent="."]
+position = Vector3(0, 0, 25)
+script = ExtResource("touch")
+objective_id = "lanterns"
+kind = "lantern"
+effect = "heal"
+hud_name = "Spirit Lantern"
+hud_main = false
+
+[node name="Lantern2" type="Area3D" parent="."]
+position = Vector3(-46, 0, 0)
+script = ExtResource("touch")
+objective_id = "lanterns"
+kind = "lantern"
+effect = "heal"
+hud_name = "Spirit Lantern"
+hud_main = false
+
+[node name="Lantern3" type="Area3D" parent="."]
+position = Vector3(50, 0, 5)
+script = ExtResource("touch")
+objective_id = "lanterns"
+kind = "lantern"
+effect = "heal"
+hud_name = "Spirit Lantern"
+hud_main = false

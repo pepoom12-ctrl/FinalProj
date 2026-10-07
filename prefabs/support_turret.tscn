@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://blc6k0ojub4kb"]
+
+[ext_resource type="Script" uid="uid://30qly31qluxn" path="res://scripts/support_turret.gd" id="1_6r1kh"]
+
+[node name="SupportTurret" type="Node2D" unique_id=264977562]
+script = ExtResource("1_6r1kh")
+
+[node name="Visual" type="Polygon2D" parent="." unique_id=1245384356]
+color = Color(0.4, 0.8, 1, 1)
+polygon = PackedVector2Array(16, 0, -10, 10, -10, -10)

@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2om34"]
+albedo_color = Color(0.3, 1, 0.6, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.3, 1, 0.6, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2srp0"]
+top_radius = 0.0
+height = 0.9
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08all"]
+albedo_color = Color(0.3, 1, 0.6, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.3, 1, 0.6, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wteka"]
+bottom_radius = 0.0
+height = 0.9
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f70kf"]
+albedo_color = Color(0.5, 1, 0.8, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.5, 1, 0.8, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_cgrju"]
+inner_radius = 0.75
+outer_radius = 0.85
+rings = 16
+ring_segments = 8
+
+[node name="Core" type="Node3D" unique_id=1564303028]
+
+[node name="Part_1" type="MeshInstance3D" parent="." unique_id=1107164969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("StandardMaterial3D_2om34")
+mesh = SubResource("CylinderMesh_2srp0")
+
+[node name="Part_2" type="MeshInstance3D" parent="." unique_id=187521770]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+material_override = SubResource("StandardMaterial3D_08all")
+mesh = SubResource("CylinderMesh_wteka")
+
+[node name="Part_3" type="MeshInstance3D" parent="." unique_id=1005339118]
+material_override = SubResource("StandardMaterial3D_f70kf")
+mesh = SubResource("TorusMesh_cgrju")

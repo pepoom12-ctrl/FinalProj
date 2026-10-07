@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://qmau1tm6uthi"]
+
+[ext_resource type="Script" uid="uid://cgv56m6d2uv6k" path="res://scripts/enemy.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://c6p5ig1um4cin" path="res://prefabs/bullet.tscn" id="2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.45
+height = 1.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_enemy"]
+albedo_color = Color(0.666667, 0.666667, 0.666667, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
+radius = 0.45
+height = 1.4
+
+[node name="Enemy" type="CharacterBody3D" unique_id=480071398]
+script = ExtResource("1")
+bullet_scene = ExtResource("2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=439906481]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Visual" type="MeshInstance3D" parent="." unique_id=743791]
+material_override = SubResource("Mat_enemy")
+mesh = SubResource("CapsuleMesh_1")
