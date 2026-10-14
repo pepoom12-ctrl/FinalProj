@@ -3,6 +3,7 @@ extends Area3D
 
 const C := preload("res://scripts/model_utils.gd")
 const PB := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 @export var objective_id: String = "souls"
 @export var kind: String = "soul"
@@ -44,6 +45,7 @@ func _process(delta: float) -> void:
 
 func _collect() -> void:
 	finished = true
+	Audio.sfx("pickup")
 	for om in get_tree().get_nodes_in_group("objective_manager"):
 		om.report(objective_id)
 	_label.visible = false

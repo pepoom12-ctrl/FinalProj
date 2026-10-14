@@ -3,6 +3,7 @@ extends CharacterBody3D
 ## ORC = slow tank. Flashes white on hit, hops while walking, pops on death.
 
 const Chibi := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 enum Faction { UNDEAD, ELF, ORC }
 
@@ -173,6 +174,7 @@ func _attack(target: Node3D) -> void:
 		if bullet.has_method("make_arrow"):
 			bullet.make_arrow()
 			bullet.speed = 22.0
+			Audio.sfx("arrow_shoot")
 		if bullet.has_method("setup"):
 			bullet.setup(dir, attack_damage, self)
 	else:
@@ -186,6 +188,7 @@ func take_damage(amount: int) -> void:
 		return
 	current_health -= amount
 	Chibi.flash(_model)
+	Audio.sfx("hit_enemy")
 	if current_health <= 0:
 		die()
 
@@ -194,6 +197,7 @@ func die() -> void:
 	if _dead:
 		return
 	_dead = true
+	Audio.sfx("enemy_die")
 	died.emit(self)
 	remove_from_group("enemies")
 	set_physics_process(false)

@@ -9,6 +9,8 @@ signal side_complete(id: String)
 signal objective_changed(id: String)
 signal objective_completed(id: String)
 
+const Audio := preload("res://scripts/audio_manager.gd")
+
 @export var objectives: Array = []
 
 var main_done: int = 0
@@ -71,14 +73,19 @@ func report(id: String, amount: int = 1) -> void:
 	s["done"] = mini(s["total"], s["done"] + amount)
 	_recount()
 	objective_changed.emit(id)
+	if id != "kills":
+		Audio.sfx("objective_tick")
 	if s["main"]:
 		main_progress.emit(main_done, main_total)
 	else:
 		side_progress.emit(side_done, side_total)
 	if s["done"] >= s["total"]:
 		objective_completed.emit(id)
+		if id != "kills":
+			Audio.sfx("objective_done")
 		if not s["main"]:
 			side_complete.emit(id)
 		if s["main"] and not _main_finished and main_done >= main_total:
 			_main_finished = true
 			main_complete.emit()
+			Audio.sfx("main_complete")

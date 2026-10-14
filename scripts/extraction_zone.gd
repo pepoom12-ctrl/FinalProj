@@ -10,6 +10,7 @@ signal countdown_tick(seconds_left: float)
 signal extraction_success
 
 const C := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 @export var survive_time: float = 30.0
 @export var open_radius: float = 7.0
@@ -45,6 +46,7 @@ func _connect_objectives() -> void:
 func _arm() -> void:
 	_unlocked = true
 	visible = true
+	Audio.sfx("portal_open")
 	armed.emit()
 
 
@@ -59,8 +61,14 @@ func try_open(player_pos: Vector3) -> String:
 	if d > open_radius:
 		return "Get closer to the extraction zone"
 	_started = true
+	Audio.sfx("portal_activate")
+	Audio.loop_start("portal_hum")
 	opened.emit()
 	return ""
+
+
+func _exit_tree() -> void:
+	Audio.loop_stop("portal_hum")
 
 
 func _process(delta: float) -> void:
@@ -69,6 +77,10 @@ func _process(delta: float) -> void:
 	_time_left -= delta
 	countdown_tick.emit(max(_time_left, 0.0))
 	if _time_left <= 0.0:
+		Audio.loop_stop("portal_hum")
+		Audio.sfx("portal_warp")
 		extraction_success.emit()
-		if _level_manager and _level_manager.has_method("go_to_next_level"):
+		# The HUD shows the results screen and moves on when the player presses
+		# NEXT LEVEL. Without a HUD listening, advance straight away.
+		if extraction_success.get_connections().is_empty() and _level_manager and _level_manager.has_method("go_to_next_level"):
 			_level_manager.go_to_next_level()

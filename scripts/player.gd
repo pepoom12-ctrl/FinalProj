@@ -72,6 +72,7 @@ signal stratagem_ready(stratagem_name: String)
 @onready var target_reticle: MeshInstance3D = get_node_or_null("TargetReticle")
 
 const Chibi := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 var _model: Node3D
 var _carry_node: Node3D
 var _anim_t := 0.0
@@ -208,6 +209,7 @@ func _fire_bullet() -> void:
 	if bullet_scene == null:
 		return
 	var cfg: Dictionary = STAFF_CONFIG[current_staff]
+	Audio.sfx(["fire_cast", "ice_cast", "lightning_cast"][int(current_staff)])
 	var bullet := bullet_scene.instantiate()
 	get_tree().current_scene.add_child(bullet)
 	bullet.global_position = global_position + Vector3(0, 0.2, 0)
@@ -236,6 +238,7 @@ func _update_input_buffer(delta: float) -> void:
 		pressed_dir = "ui_right"
 
 	if pressed_dir != "":
+		Audio.sfx("strat_input")
 		_input_buffer.append(pressed_dir)
 		_input_buffer_timer = STRATAGEM_INPUT_TIMEOUT
 		_check_stratagem_match()
@@ -274,6 +277,7 @@ func _check_stratagem_match() -> void:
 			# otherwise the held button would never register as "just pressed"
 			# and the player would be stuck unable to fire.
 			_confirm_armed = not Input.is_action_pressed("shoot")
+			Audio.sfx("strat_ready")
 			stratagem_targeting_started.emit(key)
 			_input_buffer.clear()
 			input_buffer_changed.emit([])
@@ -294,6 +298,7 @@ func _use_instant_stratagem(key: String) -> void:
 			if opened:
 				stratagem_called.emit(key)
 			else:
+				Audio.sfx("strat_deny")
 				notice.emit(msg)
 
 
@@ -301,6 +306,7 @@ func _try_call_stratagem(stratagem_name: String) -> void:
 	if _stratagem_cooldowns.get(stratagem_name, 0.0) > 0.0:
 		return
 	_stratagem_cooldowns[stratagem_name] = stratagems[stratagem_name]["cooldown"]
+	Audio.sfx("strat_confirm")
 	stratagem_called.emit(stratagem_name)
 	match stratagem_name:
 		"meteor_strike":
@@ -371,11 +377,15 @@ func _animate_model(delta: float) -> void:
 
 func set_carrying(v: bool) -> void:
 	carrying_item = v
+	if v:
+		Audio.sfx("core_pickup")
 	if _carry_node:
 		_carry_node.visible = v
 
 
 func heal(amount: int) -> void:
+	if amount > 0:
+		Audio.sfx("heal")
 	current_health = min(max_health, current_health + amount)
 	health_changed.emit(current_health, max_health)
 
@@ -383,6 +393,7 @@ func heal(amount: int) -> void:
 func take_damage(amount: int) -> void:
 	Chibi.flash(_model)
 	current_health = max(0, current_health - amount)
+	Audio.sfx("player_die" if current_health <= 0 else "player_hurt")
 	health_changed.emit(current_health, max_health)
 	if current_health <= 0:
 		died.emit()

@@ -3,6 +3,7 @@ extends Area3D
 
 const C := preload("res://scripts/model_utils.gd")
 const PB := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 signal destroyed
 
@@ -46,6 +47,7 @@ func take_damage(amount: int) -> void:
 		return
 	current_health -= amount
 	C.flash(_model)
+	Audio.sfx("stone_hit")
 	_update_label()
 	var t := create_tween()
 	t.tween_property(_model, "position:x", 0.12, 0.04)
@@ -57,6 +59,7 @@ func take_damage(amount: int) -> void:
 
 func _destroy() -> void:
 	finished = true
+	Audio.sfx("stone_break")
 	destroyed.emit()
 	for om in get_tree().get_nodes_in_group("objective_manager"):
 		om.report(objective_id)

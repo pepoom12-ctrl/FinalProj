@@ -5,6 +5,7 @@ extends CanvasLayer
 ## in web exports.
 
 const ArrowIcon := preload("res://scripts/arrow_icon.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 const DIR_ANGLE := {"ui_up": 0.0, "ui_right": 90.0, "ui_down": 180.0, "ui_left": 270.0}
 
@@ -32,12 +33,15 @@ var _codes_box: VBoxContainer
 var _boss_box: VBoxContainer
 var _boss_bar: ProgressBar
 var _dead := false
+var _results_shown := false
 
 
 func _ready() -> void:
 	for l in [objective_label, extraction_label]:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.custom_minimum_size = Vector2(430, 0)
+	objective_label.add_theme_font_size_override("font_size", 13)
+	stratagem_label.add_theme_font_size_override("font_size", 13)
 	_build_pointer()
 	_build_echo()
 	_build_boss_bar()
@@ -125,9 +129,6 @@ func _connect_signals() -> void:
 		_player.died.connect(_on_player_died)
 		_on_health_changed(_player.current_health, _player.max_health)
 		_build_stratagem_help()
-		var weapon_label := Label.new()
-		weapon_label.text = "Weapon: %s" % _player.STAFF_CONFIG[_player.current_staff]["name"]
-		$Margin/VBox.add_child(weapon_label)
 
 	var managers := get_tree().get_nodes_in_group("level_manager")
 	if managers.size() > 0:
@@ -141,12 +142,13 @@ func _connect_signals() -> void:
 		_om = om
 		om.objective_changed.connect(func(_id): _refresh_objectives())
 	_refresh_objectives()
-	_show_intro_banner()
+	# Intro popup disabled. Add `_show_intro_banner()` here to bring it back.
 
 	for ez in get_tree().get_nodes_in_group("extraction_zone"):
 		ez.armed.connect(_on_extraction_armed)
 		ez.opened.connect(_on_extraction_opened)
 		ez.countdown_tick.connect(_on_extraction_tick)
+		ez.extraction_success.connect(_on_level_clear)
 
 	for b in get_tree().get_nodes_in_group("boss"):
 		_boss = b
@@ -164,9 +166,10 @@ func _refresh_objectives() -> void:
 		return
 	var lines: Array[String] = []
 	for ln in _om.get_lines():
-		var tag := "MAIN" if ln["main"] else "SIDE"
+		if not ln["main"]:
+			continue
 		var mark := "[X]" if ln["done"] >= ln["total"] else "[ ]"
-		lines.append("%s %s: %s (%d/%d)" % [mark, tag, ln["text"], ln["done"], ln["total"]])
+		lines.append("%s %s (%d/%d)" % [mark, ln["text"], ln["done"], ln["total"]])
 	objective_label.text = "\n".join(lines)
 
 
@@ -287,10 +290,96 @@ func _on_extraction_tick(seconds_left: float) -> void:
 	extraction_label.text = "Extracting... %.0fs" % seconds_left
 
 
+func _on_level_clear() -> void:
+	if _dead or _results_shown:
+		return
+	_results_shown = true
+	Audio.sfx("level_clear")
+	get_tree().paused = true
+	var layer := Control.new()
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(layer)
+	var dim := ColorRect.new()
+	dim.color = Color(0.0, 0.0, 0.05, 0.7)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(dim)
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(center)
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.06, 0.07, 0.12, 0.95)
+	style.set_corner_radius_all(10)
+	style.set_content_margin_all(26)
+	panel.add_theme_stylebox_override("panel", style)
+	center.add_child(panel)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 8)
+	box.custom_minimum_size = Vector2(560, 0)
+	panel.add_child(box)
+
+	var title := Label.new()
+	title.text = "LEVEL CLEAR!"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 56)
+	title.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
+	box.add_child(title)
+	var sub := Label.new()
+	sub.text = level_label.text
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(sub)
+
+	var side_done := 0
+	var side_total := 0
+	var side_lines: Array = []
+	if _om != null:
+		for ln in _om.get_lines():
+			if ln["main"]:
+				continue
+			side_total += 1
+			if ln["done"] >= ln["total"]:
+				side_done += 1
+			side_lines.append(ln)
+
+	var head := Label.new()
+	head.text = "SIDE OBJECTIVES   %d / %d" % [side_done, side_total]
+	head.add_theme_font_size_override("font_size", 20)
+	head.add_theme_color_override("font_color", Color(0.7, 0.85, 1.0))
+	box.add_child(head)
+	for ln in side_lines:
+		var done: bool = ln["done"] >= ln["total"]
+		var row := Label.new()
+		row.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		row.custom_minimum_size = Vector2(540, 0)
+		row.text = "%s %s  (%d/%d)" % ["[X]" if done else "[ ]", ln["text"], ln["done"], ln["total"]]
+		row.add_theme_color_override("font_color", Color(0.55, 1.0, 0.6) if done else Color(0.75, 0.55, 0.55))
+		box.add_child(row)
+
+	var nxt: String = ""
+	if _level_manager != null and "next_level_path" in _level_manager:
+		nxt = _level_manager.next_level_path
+	var last: bool = nxt == "" or nxt.ends_with("main_menu.tscn")
+	var btn := Button.new()
+	btn.text = "FINISH" if last else "NEXT LEVEL"
+	btn.custom_minimum_size = Vector2(300, 56)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	btn.add_theme_font_size_override("font_size", 24)
+	btn.pressed.connect(func():
+		Audio.sfx("ui_click")
+		get_tree().paused = false
+		if nxt == "":
+			get_tree().call_deferred("change_scene_to_file", "res://scenes/main_menu.tscn")
+		else:
+			_level_manager.go_to_next_level())
+	box.add_child(btn)
+
+
 func _on_player_died() -> void:
 	if _dead:
 		return
 	_dead = true
+	Audio.bgm_stop()
 	get_tree().paused = true
 	var layer := Control.new()
 	layer.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -321,6 +410,7 @@ func _on_player_died() -> void:
 	restart.custom_minimum_size = Vector2(300, 56)
 	restart.add_theme_font_size_override("font_size", 24)
 	restart.pressed.connect(func():
+		Audio.sfx("ui_click")
 		get_tree().paused = false
 		get_tree().call_deferred("reload_current_scene"))
 	box.add_child(restart)
@@ -329,6 +419,7 @@ func _on_player_died() -> void:
 	menu.custom_minimum_size = Vector2(300, 56)
 	menu.add_theme_font_size_override("font_size", 24)
 	menu.pressed.connect(func():
+		Audio.sfx("ui_back")
 		get_tree().paused = false
 		get_tree().call_deferred("change_scene_to_file", "res://scenes/main_menu.tscn"))
 	box.add_child(menu)

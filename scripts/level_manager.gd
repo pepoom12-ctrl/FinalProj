@@ -13,6 +13,8 @@ signal wave_cleared(wave_index: int)
 @export var level_name: String = "Level"
 @export var map_half_size: float = 65.0
 
+const Audio := preload("res://scripts/audio_manager.gd")
+
 @onready var spawn_points: Node = get_node_or_null("SpawnPoints")
 
 var _current_wave := 0
@@ -23,6 +25,10 @@ var _spawn_timer := 0.0
 
 func _ready() -> void:
 	add_to_group("level_manager")
+	# Music follows the scenery theme (Decor node): 0 graveyard, 1 forest, 2 volcano.
+	var decor := get_node_or_null("Decor")
+	var theme: int = decor.theme if decor != null and "theme" in decor else 0
+	Audio.bgm(["graveyard", "forest", "volcano"][clampi(theme, 0, 2)])
 	call_deferred("_start_next_wave")
 
 

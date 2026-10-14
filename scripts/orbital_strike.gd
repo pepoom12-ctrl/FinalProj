@@ -4,6 +4,8 @@ extends Node3D
 
 @export var radius: float = 4.5
 @export var damage: int = 70
+const Audio := preload("res://scripts/audio_manager.gd")
+
 @export var telegraph_time: float = 0.8
 
 @onready var ring: MeshInstance3D = $WarningRing
@@ -16,6 +18,7 @@ var _blast_mat: StandardMaterial3D
 
 
 func _ready() -> void:
+	Audio.sfx("meteor_incoming")
 	ring.mesh.top_radius = radius
 	ring.mesh.bottom_radius = radius
 	blast.mesh.top_radius = radius
@@ -54,6 +57,7 @@ func _process(delta: float) -> void:
 
 
 func _explode() -> void:
+	Audio.sfx("explosion_big")
 	_has_exploded = true
 	ring.visible = false
 	blast.visible = true

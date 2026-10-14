@@ -5,6 +5,7 @@ extends CharacterBody3D
 ## At 50% HP it roars, summons orcs and becomes enraged (faster, more spins).
 
 const C := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 signal died
 signal health_changed(current: int, max: int)
@@ -135,6 +136,7 @@ func _physics_process(delta: float) -> void:
 			_pulse_tele(_t / 0.9)
 			if _t >= 0.9:
 				_clear_tele()
+				Audio.sfx("boss_charge")
 				_set_state(S.CHARGE)
 		S.CHARGE:
 			velocity = _charge_dir * 20.0 * speed_mul
@@ -156,6 +158,7 @@ func _physics_process(delta: float) -> void:
 			_pulse_tele(_t / 0.7)
 			if _t >= 0.7:
 				_set_state(S.SPIN)
+				Audio.sfx("spin_whoosh")
 				_spin_tick = 0.0
 		S.SPIN:
 			_model.rotation.y += delta * 16.0
@@ -227,6 +230,7 @@ func _start_slam() -> void:
 
 
 func _do_slam() -> void:
+	Audio.sfx("boss_slam")
 	_clear_tele()
 	if _flat_to_player().length() <= 5.8:
 		_hurt_player(30)
@@ -252,6 +256,7 @@ func _start_spin() -> void:
 
 func _start_roar() -> void:
 	_roared = true
+	Audio.sfx("boss_roar")
 	_set_state(S.ROAR)
 	var scn: PackedScene = load("res://prefabs/enemy.tscn")
 	for i in 2:
@@ -263,6 +268,7 @@ func _start_roar() -> void:
 
 
 func _do_volley() -> void:
+	Audio.sfx("fireball")
 	var scn: PackedScene = load("res://prefabs/bullet.tscn")
 	var base := _flat_to_player().normalized()
 	var n := 7 if _enraged else 5
@@ -350,6 +356,7 @@ func take_damage(amount: int) -> void:
 		_set_state(S.CHASE)
 	current_health -= amount
 	C.flash(_model)
+	Audio.sfx("hit_enemy")
 	health_changed.emit(maxi(current_health, 0), max_health)
 	if not _enraged and current_health <= max_health / 2:
 		_enraged = true
@@ -359,6 +366,7 @@ func take_damage(amount: int) -> void:
 
 func _die() -> void:
 	finished = true
+	Audio.sfx("boss_die")
 	died.emit()
 	for om in get_tree().get_nodes_in_group("objective_manager"):
 		om.report("warlord")

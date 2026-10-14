@@ -12,6 +12,7 @@ extends CharacterBody3D
 var current_health: int
 var _model: Node3D
 const Chibi := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 var _attack_timer: float = 0.0
 var _age: float = 0.0
 
@@ -21,6 +22,7 @@ signal died
 func _ready() -> void:
 	current_health = max_health
 	add_to_group("taunt_targets")
+	Audio.sfx("golem_summon")
 	add_to_group("player_allies")
 	var old := get_node_or_null("Visual")
 	if old:
@@ -57,6 +59,7 @@ func _physics_process(delta: float) -> void:
 			if _attack_timer <= 0.0:
 				if target.has_method("take_damage"):
 					target.take_damage(attack_damage)
+					Audio.sfx("stone_hit")
 				_attack_timer = attack_cooldown
 	else:
 		velocity = Vector3.ZERO

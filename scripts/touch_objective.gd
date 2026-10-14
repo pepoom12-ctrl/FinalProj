@@ -4,6 +4,7 @@ extends Area3D
 
 const C := preload("res://scripts/model_utils.gd")
 const PB := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 @export var objective_id: String = "alarms"
 @export var kind: String = "alarm"            # alarm | valve | lantern
@@ -40,6 +41,7 @@ func _process(_delta: float) -> void:
 
 func _trigger(p: Node) -> void:
 	finished = true
+	Audio.sfx({"alarm": "sabotage", "valve": "valve", "lantern": "lantern"}.get(kind, "pickup"))
 	match effect:
 		"slow_spawns":
 			for lm in get_tree().get_nodes_in_group("level_manager"):

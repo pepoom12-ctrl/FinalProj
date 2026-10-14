@@ -3,6 +3,7 @@ extends Node3D
 ## objective `stop_id` (the magma valves) is completed.
 
 const C := preload("res://scripts/model_utils.gd")
+const Audio := preload("res://scripts/audio_manager.gd")
 
 @export var interval: float = 3.0
 @export var radius: float = 3.6
@@ -52,10 +53,12 @@ func _strike() -> void:
 	disc.material_override = m
 	get_tree().current_scene.add_child(disc)
 	disc.global_position = c
+	Audio.sfx("meteor_incoming", 1.0, -6.0)
 	get_tree().create_timer(1.1).timeout.connect(_explode.bind(disc, c))
 
 
 func _explode(disc: MeshInstance3D, c: Vector3) -> void:
+	Audio.sfx("explosion_small")
 	if is_instance_valid(disc):
 		disc.queue_free()
 	var fx := MeshInstance3D.new()
